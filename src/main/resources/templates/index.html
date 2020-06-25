@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Check user session</title>
+    <style>
+        table {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table td,
+        table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #ddd;
+        }
+
+        table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #00806f;
+            color: white;
+        }
+    </style>
+</head>
+<body th:object="${table}">
+
+<table>
+    <thead>
+        <tr>
+            <th th:each="title : ${table.titles}" th:text="${title}"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="row : ${table.rows}">
+            <td th:each="column : ${row.columns}" th:text="${column}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
