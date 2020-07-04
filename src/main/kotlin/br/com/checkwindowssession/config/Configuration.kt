@@ -1,15 +1,15 @@
 package br.com.checkwindowssession.config
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.web.server.ConfigurableWebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
+import javax.inject.Inject
 
 @Component
 class Configuration: WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
 
-    @Autowired
+    @Inject
     lateinit var environment: Environment
 
     override fun customize(factory: ConfigurableWebServerFactory?) {

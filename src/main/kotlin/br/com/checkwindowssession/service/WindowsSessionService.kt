@@ -10,7 +10,9 @@ class WindowsSessionService {
     companion object {
         private const val SPACE_BETWEEN_PATTERN = "([0-9A-z])\\s([0-9A-z])"
         private const val TWO_MORE_SPACES = "\\s{2,}"
+        private const val SINGLE_SPACE = " "
         private const val BREAK_LINE = "\n"
+        private const val RDP_TCP_USER = "rdp-tcp"
     }
 
     fun executeWindowsCmd(): String {
@@ -24,20 +26,27 @@ class WindowsSessionService {
     }
 
     fun transform(process: String): TableDTO {
-
-        val removeSpaceBetween = Regex(SPACE_BETWEEN_PATTERN, RegexOption.MULTILINE);
-        val formatted = process.replace(">", "").replace(removeSpaceBetween, "$1-$2")
+        val formatted = process.removeArrowAndSpace();
 
         val split = formatted.split(BREAK_LINE)
-                .map { it.trim().replace(Regex(TWO_MORE_SPACES), " ") }
+                .map { it.trim().replace(Regex(TWO_MORE_SPACES), SINGLE_SPACE) }
                 .filter { it != "" }
 
-        val titles = split[0].split(" ")
+        val titles = split[0].split(SINGLE_SPACE)
 
-        var rows = listOf<RowDTO>()
-        if (split.size > 1) {
-            rows = split.subList(1, split.size).filter{ it.contains("rdp-tcp") }.map { row -> RowDTO(row.split(" ")) }
-        }
-        return TableDTO(titles, rows)
+        return TableDTO(titles, rowsWithoutheader(split))
+    }
+
+    fun rowsWithoutheader(list: List<String>): List<RowDTO> {
+
+        if (list.size <= 1)
+            return listOf<RowDTO>()
+
+        return list.subList(1, list.size).filter { it.contains(RDP_TCP_USER) }.map { row -> RowDTO(row.split(SINGLE_SPACE)) }
+    }
+
+    fun String.removeArrowAndSpace(): String {
+        val removeSpaceBetween = Regex(SPACE_BETWEEN_PATTERN, RegexOption.MULTILINE);
+        return this.replace(">", "").replace(removeSpaceBetween, "$1-$2")
     }
 }

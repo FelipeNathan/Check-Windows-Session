@@ -26,6 +26,14 @@ class WindowsSessionServiceTests {
     }
 
     @Test
+    fun shouldHaveMoreThanOneUser() {
+        Mockito.`when`(service.executeWindowsCmd()).then { "TITLE\n\rrdp-tcp\n\rrdp-tcp" }
+
+        val dto = service.getUsersInSession()
+        assert(dto.rows.size > 1)
+    }
+
+    @Test
     fun shouldHaveNoUsers() {
         Mockito.`when`(service.executeWindowsCmd()).then { "TITLE\n\r1" }
 
